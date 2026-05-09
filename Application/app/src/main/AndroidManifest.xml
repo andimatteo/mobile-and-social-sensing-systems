@@ -8,9 +8,12 @@
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_LOCATION" tools:ignore="ForegroundServicesPolicy" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" tools:ignore="ForegroundServicesPolicy" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_HEALTH" />
-
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.ACTIVITY_RECOGNITION" />
     <uses-permission android:name="android.permission.HIGH_SAMPLING_RATE_SENSORS" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
+
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
 
     <application
         android:allowBackup="true"
@@ -41,15 +44,20 @@
 
         <service
             android:name=".FallDetectionService"
-            android:exported="false"
-            android:foregroundServiceType="health"
-            tools:ignore="ForegroundServicePermission" />
+            android:foregroundServiceType="specialUse"
+            android:exported="false">
+
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Fall Detection service using AI" />
+        </service>
 
         <service
             android:name=".LocationService"
             android:exported="false"
             android:foregroundServiceType="location"
             tools:ignore="ForegroundServicePermission" />
+
 
     </application>
 

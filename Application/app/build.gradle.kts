@@ -13,7 +13,7 @@ android {
 
     defaultConfig {
         applicationId = "com.falldetector"
-        minSdk = 35
+        minSdk = 33
         targetSdk = 36
         versionCode = 1
         versionName = "1.0"
@@ -37,6 +37,14 @@ android {
     buildFeatures {
         compose = true
     }
+    packaging {
+        jniLibs {
+            keepDebugSymbols.add("**/*.so")
+        }
+        resources {
+            excludes += "/META-INF/{AL2.0,LGPL2.1}"
+        }
+    }
 }
 
 dependencies {
@@ -57,4 +65,13 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
     debugImplementation(libs.androidx.compose.ui.tooling)
+
+    implementation("org.tensorflow:tensorflow-lite:2.16.1")
+    implementation("org.tensorflow:tensorflow-lite-select-tf-ops:2.16.1")
+}
+
+configurations.all {
+    resolutionStrategy {
+        force("org.tensorflow:tensorflow-lite-api:2.16.1")
+    }
 }
