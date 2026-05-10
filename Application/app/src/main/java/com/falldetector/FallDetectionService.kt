@@ -25,6 +25,8 @@ import java.nio.channels.FileChannel
 import kotlin.math.abs
 import kotlin.math.sqrt
 
+import com.falldetector.FallDetectedActivity;
+
 class FallDetectionService : Service(), SensorEventListener {
 
     private lateinit var sensorManager: SensorManager
@@ -137,11 +139,16 @@ class FallDetectionService : Service(), SensorEventListener {
         if (fallTimerRunnable != null) return
 
         Log.w("FallDetector", "Fall detected")
+
+        val intent = Intent(this, FallDetectedActivity::class.java).apply {
+            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        startActivity(intent)
+
         sendInterventionNotification()
 
-        fallTimerRunnable = Runnable {
-            triggerCriticalAlerts()
-        }
+        fallTimerRunnable = Runnable { triggerCriticalAlerts() }
         mainHandler.postDelayed(fallTimerRunnable!!, RESPONSE_TIME_MS)
     }
 
@@ -156,7 +163,7 @@ class FallDetectionService : Service(), SensorEventListener {
     }
 
     private fun triggerCriticalAlerts() {
-        Log.e("FallDetector", "🚨 Timer expired.")
+        Log.e("FallDetector", "Timer expired.")
         fallTimerRunnable = null
         sendPostRequest()
         broadcastBLESignal()
@@ -190,7 +197,7 @@ class FallDetectionService : Service(), SensorEventListener {
 
         val notification = NotificationCompat.Builder(this, channelId)
             .setContentTitle("Fall Detection Attivo")
-            .setContentText("Monitoraggio sensori in background...")
+            .setContentText("")
             .setSmallIcon(android.R.drawable.ic_dialog_info)
             .build()
 
