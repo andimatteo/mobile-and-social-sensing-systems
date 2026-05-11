@@ -92,6 +92,13 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
             android:text="Save Settings" />
+
+        <Button
+            android:id="@+id/btnSignOut"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:text="Sign out" />
             
     </LinearLayout>
 </ScrollView>

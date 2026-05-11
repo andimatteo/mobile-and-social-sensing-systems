@@ -14,6 +14,7 @@ import androidx.activity.ComponentActivity
 class SettingsActivity : ComponentActivity() {
 
     private lateinit var sharedPrefs: SharedPreferences
+    private val authPrefs by lazy { getSharedPreferences("Auth", Context.MODE_PRIVATE) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,6 +30,7 @@ class SettingsActivity : ComponentActivity() {
         val editFreshness = findViewById<EditText>(R.id.editFreshness)
         val editAccuracy = findViewById<EditText>(R.id.editAccuracy)
         val btnSave = findViewById<Button>(R.id.btnSaveSettings)
+        val btnSignOut = findViewById<Button>(R.id.btnSignOut)
         
         // Load Mode
         val currentMode = sharedPrefs.getInt("LOCATION_MODE", 0)
@@ -70,11 +72,25 @@ class SettingsActivity : ComponentActivity() {
             Toast.makeText(this, "Settings saved. Restarting tracking...", Toast.LENGTH_SHORT).show()
             restartLocationService()
         }
+
+        btnSignOut.setOnClickListener {
+            authPrefs.edit().clear().apply()
+            stopServices()
+            Toast.makeText(this, "Signed out", Toast.LENGTH_SHORT).show()
+            val intent = Intent(this, LoginActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
 
     private fun restartLocationService() {
         val serviceIntent = Intent(this, LocationService::class.java)
         stopService(serviceIntent)
         startForegroundService(serviceIntent)
+    }
+
+    private fun stopServices() {
+        stopService(Intent(this, LocationService::class.java))
+        stopService(Intent(this, FallDetectionService::class.java))
     }
 }
